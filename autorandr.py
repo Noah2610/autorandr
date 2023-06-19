@@ -103,6 +103,7 @@ Usage: autorandr [options]
 --match-edid            match displays based on edid instead of name
 --force                 force (re)loading of a profile / overwrite exiting files
 --list                  list configurations
+--list-virtual          list virtual profiles
 --skip-options <option> comma separated list of xrandr arguments (e.g. "gamma")
                         to skip both in detecting changes and applying a profile
 --version               show version information and exit
@@ -1405,6 +1406,7 @@ def main(argv):
                 "skip-options=",
                 "help",
                 "list",
+                "list-virtual",
                 "current",
                 "detected",
                 "version",
@@ -1430,6 +1432,11 @@ def main(argv):
     if "--current" in options and "--detected" in options:
         print("--current and --detected are mutually exclusive.", file=sys.stderr)
         sys.exit(posix.EX_USAGE)
+
+    # List virtual profiles
+    if "--list-virtual" in options:
+        list_virtual_profiles()
+        sys.exit(0)
 
     # Batch mode
     if "--batch" in options:
@@ -1680,6 +1687,11 @@ def main(argv):
 
     sys.exit(0)
 
+def list_virtual_profiles():
+    output = []
+    for profile in virtual_profiles:
+        output.append(profile[0])
+    print("\n".join(output))
 
 def exception_handled_main(argv=sys.argv):
     try:
